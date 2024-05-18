@@ -3,15 +3,40 @@
 const express = require('express');
 
 const app = express();
-var expressWs = require('express-ws')(app);
+const expressWs = require('express-ws')(app);
+
+const basicAuth = require('express-basic-auth');
+
+var globalWs = null;
+
+// Basic Auth
+/**
+app.use(basicAuth({
+  users: { 'nimmsta ': 'NimmstaRocks!' },
+})); */
+
+app.use(express.json());
 
 app.get('/', (req, res) => {
+  if (globalWs) {
+    globalWs.send('Hello, world!');
+  }
   res.status(200).send('Hello, world!').end();
 });
 
+// API (Post)
+app.post('/api', (req, res) => {
+  if (globalWs) {
+    console.log("Sending... " + JSON.stringify(req.body));
+    globalWs.send(JSON.stringify(req.body));
+  }
+  res.json(req.body);
+});
+
 // Websocket
-app.ws('/echo', function(ws, req) {
-  ws.on('message', function(msg) {
+app.ws('/echo', function (ws, req) {
+  globalWs = ws;
+  ws.on('message', function (msg) {
     console.log(msg);
     ws.send(msg);
   });
