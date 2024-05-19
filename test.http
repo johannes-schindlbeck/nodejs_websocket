@@ -7,4 +7,51 @@ content-type: application/json
     "email": ""
 }
 
+
 ###
+
+post https://promising-node-227311.ew.r.appspot.com/api http/1.1
+content-type: application/json
+
+{
+    "Huident": "4718"
+}
+
+###
+# Send request RPC style
+post https://promising-node-227311.ew.r.appspot.com/api http/1.1
+content-type: application/json
+
+{
+    "Method": "ReadQueue",
+    "Params": {
+        "QueueName": "test",
+        "MaxMessages": 10,
+        "Params": [ {
+                "Name": "test",
+                "Value": "test"
+            },
+            {
+                "Name": "test",
+                "Value": "test"
+            }],
+            "SubObject": {
+                "Name": "test",
+                "Value": "test"
+            }
+        
+    }
+}
+
+###
+# Test Scan Queue
+post https://promising-node-227311.ew.r.appspot.com/api http/1.1
+content-type: application/json
+
+{
+    "Method": "ScanQueue",
+    "Params": {
+        "IF_NIMMSTA_ID": "4711",
+        "IF_QUEUE": "NIMM2"
+    }
+}
