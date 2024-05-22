@@ -20,7 +20,7 @@ app.use(basicAuth({
 app.use(express.json());
 
 app.get('/', (req, res) => {
-  res.status(200).send('Hello, world2!').end();
+  res.status(200).send('Server is running...').end();
 });
 
 // API (Post)
@@ -36,12 +36,12 @@ app.post('/api', (req, res) => {
       timeout++;
     }
     if (globalResponse == "") {
-      res.json({ error: 'Timeout' });
+      res.status(500).json({ error: 'Timeout' });
     } else {
-      res.json({ response: globalResponse });
+      res.status(200).send(globalResponse).end();
     }
   } else {
-    res.json({ error: 'No websocket connection' });
+    res.status(500).json({ error: 'No websocket connection' });
   }
 });
 
@@ -52,16 +52,16 @@ app.ws('/wsapi', function (ws, req) {
     console.log(msg);
     globalResponse = msg;
   });
-  console.log('socket', req.testing);
+  console.log('Client registered for wsapi');
 });
 
-// Websocket
+// Websocket Echo
 app.ws('/echo', function (ws, req) {
   ws.on('message', function (msg) {
     console.log(msg);
     ws.send(msg);
   });
-  console.log('socket', req.testing);
+  console.log('Client registered for Echo');
 });
 
 // Start the server
